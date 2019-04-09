@@ -1,0 +1,91 @@
+<html>
+<!-- link -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="Css/TestAPIGoogle.css">
+
+<!-- script -->
+<script src="https://apis.google.com/js/api.js"></script>
+<script type ="text/javascript" src = "Js/TestAPIGoogle.js" ></script>
+<link rel="stylesheet" href="Script/jquery.datetimepicker.min.css">
+<script src="Script/jquery.js"></script>
+<script src="Script/jquery.datetimepicker.full.js"></script>
+
+<!-- meta --> <!-- content="YOUR_CLIENT_ID"-->
+<meta name="google-signin-scope" content="profile email">
+<meta name="google-signin-client_id" content="86585982831-9f7am38m3pqpqvm5vg0tf0l3jemstksp.apps.googleusercontent.com">
+
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<style>
+  .g-signin2{
+    margin-top: 50px;
+  }
+</style>
+
+
+<body>
+  
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="mx-auto" style="width: 300px;">
+      Interaction with Google Calendar
+    </div>
+</nav>
+
+<div class="container" style="padding: 20px">
+    <div class="row">
+        <div class="col-4">
+         <!--<button onclick="authenticate(); loadClient()" style="background-color: #bdc3c7">Load Calendar's informations</button>-->
+           </div>
+        <div class="col-4">
+            <button onclick="createCalendarNameJSON(); executeCreate()" style="background-color: #bdc3c7">Create new Calendar</button>
+            <input type="text" name="" value="" id="createCalendarText" placeholder="inserisci qui il nome del calendario" size="40">
+        </div>
+        <div class="col-4">
+          <button onclick="deleteCalendar()" style="background-color: #bdc3c7">Delete a Calendar</button>
+          <input type="text" name="" value="" id="deleteCalendarText" placeholder="inserisci qui il nome del calendario" size="40">
+        </div>
+    </div>
+</div> <!-- end div container input -->
+
+<hr>
+
+<div class="container">
+  <div class="row">
+    <div class="col-2"></div>
+
+    <div class="col-8">
+        <div style="color: darkblue">Inserisci qui il titolo del nuovo evento</div>
+
+        <input type="text" id="titleNewEvent" placeholder="Es. Appuntamento"/>
+
+        <div>
+            From:
+          <input id="datetimeStart"/>
+          <script>$("#datetimeStart").datetimepicker();</script>
+            To:
+          <input id="datetimeEnd"/>
+          <script>$("#datetimeEnd").datetimepicker();</script>
+
+          <button onclick="createEventOnCalendar()">Add Event</button>
+        </div>
+    </div>
+
+    <div class="col-2">  
+        <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+
+        <a href="#" onclick="signOut();">Sign out</a>
+
+    </div>
+
+      <button onclick="delete_events()" style="background-color: #bdc3c7">Delete all events</button>
+
+</div>
+        
+
+  </div>
+</div> <!-- end dive container insert new data-->
+
+
+</body>
+
+</html>
