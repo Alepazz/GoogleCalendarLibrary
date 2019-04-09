@@ -1,0 +1,9 @@
+/* TextArea settings */
+textarea {
+width: 600px;
+height: 300px;
+background-color: #ecf0f1;
+font-size: 1em;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+border: 1px solid black;
+}
