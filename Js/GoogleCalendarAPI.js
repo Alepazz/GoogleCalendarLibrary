@@ -51,7 +51,6 @@ function executeCreate() {
     })
         .then(function(response) {
                 // Handle the results here (response.result has the parsed body).
-                //console.log("Response", response); 
                 console.log(response.result)
             },
             function(err) { console.error("Execute error", err); });
@@ -64,9 +63,7 @@ function deleteCalendar() {
 return gapi.client.calendar.calendarList.list({})
     .then(function(response) {
             // Handle the results here (response.result has the parsed body).
-            //console.log("Response list", response.result);
             calendarList = response.result
-            //console.log("Response execute List", calendarList)
             findCorrectCalendar()
           },
           function(err) { console.error("Execute error", err); });
@@ -87,14 +84,13 @@ function findCorrectCalendar(){
 
         executeDelete(calendarToDelete);
         break;
-      }//if
-    }//for
+      }
+    }
 }
 
 //Delete a specific Google Calendar
 function executeDelete(calendarToDelete) {
   return gapi.client.calendar.calendars.delete(
-    //{"calendarId": "o98i1dsb4nqi3dhlohf2v3nqtg@group.calendar.google.com"}
     calendarToDelete
   )
       .then(function(response) {
