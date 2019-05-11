@@ -1,18 +1,18 @@
 <html>
 <!-- link -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" href="Css/TestAPIGoogle.css">
+<link rel="stylesheet" type="text/css" href="Css/GoogleCalendarAPI.css">
 
 <!-- script -->
 <script src="https://apis.google.com/js/api.js"></script>
-<script type ="text/javascript" src = "Js/TestAPIGoogle.js" ></script>
+<script type ="text/javascript" src = "Js/GoogleCalendarAPI.js" ></script>
 <link rel="stylesheet" href="Script/jquery.datetimepicker.min.css">
 <script src="Script/jquery.js"></script>
 <script src="Script/jquery.datetimepicker.full.js"></script>
 
 <!-- meta --> <!-- content="YOUR_CLIENT_ID"-->
 <meta name="google-signin-scope" content="profile email">
-<meta name="google-signin-client_id" content="86585982831-9f7am38m3pqpqvm5vg0tf0l3jemstksp.apps.googleusercontent.com">
+<meta name="google-signin-client_id" content="YOUR_CLIENT_ID">
 
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 
@@ -34,7 +34,7 @@
 <div class="container" style="padding: 20px">
     <div class="row">
         <div class="col-4">
-         <!--<button onclick="authenticate(); loadClient()" style="background-color: #bdc3c7">Load Calendar's informations</button>-->
+         <button onclick="authenticate()" style="background-color: #bdc3c7">Load Calendar's informations</button>
            </div>
         <div class="col-4">
             <button onclick="createCalendarNameJSON(); executeCreate()" style="background-color: #bdc3c7">Create new Calendar</button>
@@ -77,14 +77,24 @@
 
     </div>
 
-      <button onclick="delete_events()" style="background-color: #bdc3c7">Delete all events</button>
-
 </div>
         
 
   </div>
 </div> <!-- end dive container insert new data-->
 
+
+      <button onclick="delete_events()" style="background-color: #bdc3c7">Delete all Events</button>
+
+      <button onclick="listAllEvents()" style="background-color: #bdc3c7">List all Events</button>
+
+      <button onclick="listNewEvents()" style="background-color: #bdc3c7">List new Events</button>
+
+      <button onclick="showURLToShareCalendar()" style="background-color: #bdc3c7"> Show URL to share calendar</button>
+      
+      <button onclick="showiFrameTag()" style="background-color: #bdc3c7"> Show iFrame</button>
+
+      <button onclick="showiCalPublic()" style="background-color: #bdc3c7"> Show iCal</button>
 
 </body>
 

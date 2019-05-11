@@ -25,36 +25,20 @@ function signOut() {
 
 /* -------------------------- */
 
-/*window.onload = function() {
-  loadClient();
-};
-
-function authenticate() {
-  return gapi.auth2.getAuthInstance()
-      .signIn({scope: "https://www.googleapis.com/auth/calendar"})
-      .then(function() { console.log("Sign-in successful"); },
-          function(err) { console.error("Error signing in", err); });
-};
-
-//API to load Client informations --> load all Client's calendar informations
-function loadClient() {
-    return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/calendar/v3/rest")
-        .then(function() { console.log("GAPI client loaded for API");},
-            function(err) { console.error("Error loading GAPI client for API", err); });
-};
-
-//Funzione di autenticazione del mio utente, affinchè possa eseguire le API
-/*gapi.load("client:auth2", function() {
-    gapi.auth2.init({client_id: "86585982831-9f7am38m3pqpqvm5vg0tf0l3jemstksp.apps.googleusercontent.com"});
-});*/
-
 gapi.load("client:auth2", function() {
-  gapi.auth2.init({client_id: "86585982831-9f7am38m3pqpqvm5vg0tf0l3jemstksp.apps.googleusercontent.com"}).then(function(){
+  gapi.auth2.init({client_id: "CLIENT_ID"}).then(function(){
     gapi.client.load("https://content.googleapis.com/discovery/v1/apis/calendar/v3/rest")
     .then(function() { console.log("GAPI client loaded for API");},
         function(err) { console.error("Error loading GAPI client for API", err); });
   });
 });
+
+function authenticate(){
+  return gapi.auth2.getAuthInstance()
+      .signIn({scope: "https://www.googleapis.com/auth/calendar"})
+      .then(function() { console.log("Sign-in successful"); },
+          function(err) { console.error("Error signing in", err); });
+};
 
 /* -------------------------- */
 
@@ -146,16 +130,13 @@ function createEventOnCalendar(){
     'summary': document.getElementById("titleNewEvent").value,
     'description': 'A chance to hear more about Google\'s developer products.',
     'start': {
-      'dateTime': '2019-04-05T09:00:00+02:00',
       'dateTime': ISODateString(dateStart)
     },
     'end': {
-      'dateTime': '2019-04-05T11:00:00+02:00',
       'dateTime': ISODateString(dateEnd)
     },
     'attendees': [
-      {'email': 'lpage@example.com'},
-      {'email': 'sbrin@example.com'}
+      {'email': 'lpage@example.com'}
     ],
     'reminders': {
       'useDefault': false,
@@ -177,35 +158,33 @@ return gapi.client.calendar.events.insert({
   } )
 };
 
+/* -------------------------- */
 
-//calendar id: orq5ki7e3g96rcduvgaao5okcc@group.calendar.google.com
-
-
-function getCalendar() {
-    return gapi.client.calendar.calendarList.get({
-        "calendarId": "orq5ki7e3g96rcduvgaao5okcc@group.calendar.google.com"
-    })
-        .then(function(response) {
-                // Handle the results here (response.result has the parsed body).
-                console.log("Response", response);
-            },
-            function(err) { console.error("Execute error", err); });
-}
+var calendarTodoisId = "SPECIFIED_CALENDAR_ID";
 
 var listOfEvents;
 
-function getEvents() {
-    return gapi.client.calendar.events.list({
-        "calendarId": "orq5ki7e3g96rcduvgaao5okcc@group.calendar.google.com",
-        "timeMax": "2019-04-04T10:00:00+02:00",
-        "timeMin": "2019-04-01T10:00:00+02:00"
-    })
+//cancella tutti gli eventi per uno specifico calendar id, a partire dal primo aprile 2019, fino alla data odierna, orario attuale
+function delete_events() {
+
+  var JSONobject = new Object();
+  JSONobject.calendarId = "SPECIFIED_CALENDAR_ID"
+  JSONobject.timeMax = ISODateString(new Date()); //ad oggi
+  JSONobject.timeMin = "2019-04-01T10:00:00+02:00"; //dal primo di aprile
+
+    return gapi.client.calendar.events.list(
+      JSONobject
+    )
         .then(function(response) {
                 // Handle the results here (response.result has the parsed body).
-               console.log("Response", response.result.items[0].id);
-               listOfEvents = response.result;
-               console.log("Response events list", listOfEvents);
-                deleteAll();
+                if(response.result.items[0] == null){
+                  alert("Non ci sono eventi da cancellare");
+                } else {
+                console.log("Response", response.result.items[0].id);
+                listOfEvents = response.result;
+                console.log("Response events list", listOfEvents);
+                  deleteAll();
+                }
             },
             function(err) { console.error("Execute error", err); });
 }
@@ -222,7 +201,7 @@ function deleteAll(){
 
 function deleteEvent(param) {
     var eventToDelete = new Object();
-    eventToDelete.calendarId = "orq5ki7e3g96rcduvgaao5okcc@group.calendar.google.com";
+    eventToDelete.calendarId = "SPECIFIED_CALENDAR_ID";
     eventToDelete.eventId = param;
 
     return gapi.client.calendar.events.delete(eventToDelete)
@@ -235,16 +214,63 @@ function deleteEvent(param) {
 }
 
 
-//funzione chiamata alla pressione del bottone nel file html
-function delete_events()
-{
-    var fromDate = new Date(2019,4,1,0,0,0);
-    var toDate = new Date(2019,4,4,0,0,0);
+/* -------------------------- */
 
-    // delete from Jan 1 to end of Jan 4, 2013 (for month 0 = Jan, 1 = Feb...)
+//LIST ALL THE EVENTS
 
-    var calendar = getCalendar();
+var tokenOldCalendar = new Object();
 
-    getEvents();
+function listAllEvents() {
+  return gapi.client.calendar.events.list({
+    "calendarId": "SPECIFIED_CALENDAR_ID"
+  })
+      .then(function(response) {
+              console.log("Lista eventi", response.result)
+              tokenOldCalendar.syncToken = response.result.nextSyncToken;
+              console.log("nextSyncToken", tokenOldCalendar.syncToken);
+            },
+            function(err) { console.error("Execute error", err); });
+}
 
+function listNewEvents(){
+  if (tokenOldCalendar.syncToken == undefined){
+    alert("Devi prima listare almeno una volta gli eventi se vuoi conoscere quali sono stati modificati");
+    return;
+  } else {
+    var newListOfEvents = new Object();
+    newListOfEvents.calendarId = "SPECIFIED_CALENDAR_ID";
+    newListOfEvents.syncToken = tokenOldCalendar.syncToken;
+    return gapi.client.calendar.events.list(newListOfEvents)
+        .then(function(response) {
+                console.log("Nuovi Eventi", response.result);
+                tokenOldCalendar.syncToken = response.result.nextSyncToken;
+              },
+              function(err) { console.error("Execute error", err); });
+  }
+}
+
+/* -------------------------- */
+
+//Display google calendar shareable link
+
+function remove_two_last_character(element) {
+  return element.slice(0,element.length - 2)
+}
+
+//btoa is a function that convert a string into Base64 representation
+function showURLToShareCalendar() {
+  alert("Shareable link: \n" + 
+  remove_two_last_character("https://calendar.google.com/calendar?cid="+ btoa("SPECIFIED_CALENDAR_ID")));
+}
+
+/* -------------------------- */
+
+function showiFrameTag(){
+  alert("iFrame link: \n"+
+    "<iframe src=\"https://calendar.google.com/calendar/embed?src=" + calendarTodoisId + "' style='border: 0' width='800' height='600' frameborder='0' scrolling='no'></iframe>");
+}
+
+function showiCalPublic(){
+  alert("iCal public: \n"+
+    "https://calendar.google.com/calendar/ical/" + calendarTodoisId + "/public/basic.ics");
 }
